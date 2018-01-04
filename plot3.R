@@ -1,0 +1,18 @@
+data=read.csv2("household_power_consumption.txt", header=TRUE)
+data$Date <- as.Date(data$Date, format="%d/%m/%Y")
+dif <- data[(data$Date=="2007-02-01") | (data$Date=="2007-02-02"),]
+dif$Global_active_power <- as.numeric(as.character(dif$Global_active_power))
+dif$Global_reactive_power <- as.numeric(as.character(dif$Global_reactive_power))
+dif$Voltage <- as.numeric(as.character(dif$Voltage))
+dif <- transform(dif, timestamp=as.POSIXct(paste(Date, Time)), "%d/%m/%Y %H:%M:%S")
+dif$Sub_metering_1 <- as.numeric(as.character(dif$Sub_metering_1))
+dif$Sub_metering_2 <- as.numeric(as.character(dif$Sub_metering_2))
+dif$Sub_metering_3 <- as.numeric(as.character(dif$Sub_metering_3))
+
+plot(dif$timestamp,dif$Sub_metering_1, type="l", xlab="", ylab="Energy sub metering")
+lines(dif$timestamp,dif$Sub_metering_2,col="red")
+lines(dif$timestamp,dif$Sub_metering_3,col="blue")
+legend("topright", col=c("black","red","blue"), c("Sub_metering_1 ","Sub_metering_2 ", "Sub_metering_3 "),lty=c(1,1), lwd=c(1,1))
+dev.copy(png, file="plot3.png", width=480, height=480)
+dev.off()
+cat("plot3.png has been saved in", getwd())
